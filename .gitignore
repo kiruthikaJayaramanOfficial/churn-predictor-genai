@@ -4,3 +4,4 @@ __pycache__/
 churn_env/
 mlruns/
 data/Reviews.csv
+mlops/drift_report.html
