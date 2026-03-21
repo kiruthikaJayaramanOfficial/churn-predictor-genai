@@ -1,0 +1,47 @@
+name: Churn Predictor CI/CD
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * MON'
+  workflow_dispatch:
+
+jobs:
+  retrain-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run data validation
+        run: |
+          python src/data_validation.py
+
+      - name: Build Docker image
+        run: |
+          docker build -t churn-predictor .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push to Docker Hub
+        run: |
+          docker tag churn-predictor ${{ secrets.DOCKER_USERNAME }}/churn-predictor:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/churn-predictor:latest
+
+      - name: Success
+        run: echo "✅ CI/CD pipeline complete"
