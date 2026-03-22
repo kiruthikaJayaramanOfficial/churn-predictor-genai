@@ -45,92 +45,112 @@ Telecom companies lose **₹12+ lakh/month** from silent customer churn. Traditi
 | **Champion Model** | LightGBM (`LGB_lr0.01_spw5`) |
 | **Recall** | **86.63%** — catches 87 out of every 100 churners |
 | **AUC-ROC** | 0.8317 |
-| **MLflow Runs** | 12 across 4 algorithms |
-| **Batch Test** | 300 high-risk customers → 299/300 correctly flagged (99.7%) |
+| **Total Customers** | 7,043 · Churned: 1,869 · Churn Rate: 26.5% |
+| **Avg Monthly Charges** | ₹64.76 |
+| **MLflow Runs** | 12 across 4 algorithms (LR · RF · LightGBM · XGBoost+Optuna) |
+| **Batch Test** | 300 high-risk customers → 299/300 correctly flagged (**99.7%**) |
 | **Drift Test** | 6 features drifted on shifted distribution → retraining triggered |
-| **API Response** | < 200ms per prediction |
+| **CI/CD Pipeline** | Docker build + push in **4m 47s** · Status: ✅ Success |
+| **API Response** | `{"churn_probability": 0.892, "risk_tier": "High"}` · < 200ms |
 
 > **Why Recall over Accuracy?**
-> Missing a churner = ₹780/year lost forever.
-> Wrong flag on a loyal customer = ₹50 discount cost.
+> Missing a churner = ₹780/year lost forever. Wrong flag on loyal customer = ₹50 discount.
 > Recall-first is the correct business objective — not accuracy.
 
 ---
 
-## 📸 7-Page App — What Each Page Shows
+## 🏆 MLflow — 12-Run Experiment
 
-### Page 1 — EDA Dashboard · *"What does churn look like?"*
-*Churn rate by contract type · tenure histogram coloured by churn · monthly charges violin plot · correlation heatmap · top 5 churn drivers*
+![MLflow Runs Sorted by Recall](docs/screenshots/mlflow_runs_sorted_recall.png)
 
-**Key insight:** Month-to-month customers churn at **42.7%** vs 2.8% for two-year contracts.
-
-> 📷 Screenshot: `docs/screenshots/page1_eda.png`
-
----
-
-### Page 2 — Model Comparison · *"Which model wins?"*
-*All 12 MLflow runs in a sortable table · recall bar chart · Champion badge · multi-metric grouped bar*
-
-> 📷 Screenshot: `docs/screenshots/page2_model_comparison.png`
-> 📷 Screenshot: `docs/screenshots/mlflow_parallel_coordinates.png` ← README hero
-
----
-
-### Page 3 — Live Predictor · *"Will this customer churn?"* ← Key Page
-*Customer input form · churn probability gauge 0–100% · risk tier badge High/Medium/Low · SHAP waterfall chart*
-
-**Example:** Senior citizen · Month-to-month · Fiber optic · No security · Tenure 2 months → **89.3% churn probability 🔴 HIGH**
-
-> 📷 Screenshot: `docs/screenshots/page3_live_predictor.png`
-
----
-
-### Page 4 — Churn Playbook Agent · *"WHY + what to do"*
-*LangChain reads SHAP values → generates plain-English explanation → writes Churn Playbook with 3 specific retention actions · streams word by word*
-
-**Sample output:**
 ```
-🔍 Why This Customer Will Churn
-Short tenure (2 months) + high monthly charges ($85) + no security services
-pushing churn probability to 89.3%
-
-🎯 Retention Actions (do these TODAY)
-1. Offer 10% discount on monthly charges immediately
-2. Bundle OnlineSecurity + TechSupport at discounted rate
-3. Waive next month's charges as goodwill gesture
-
-⚡ Urgency: HIGH PRIORITY — Contact within 24 hours
+Run Name            Recall    Precision    F1      AUC-ROC   Model
+────────────────────────────────────────────────────────────────────
+LGB_lr0.01_spw5    0.8663    0.4557      0.5972   0.8317    LightGBM    ← 🏆 CHAMPION
+XGB_Optuna_v2      0.8209    0.4850      0.6097   0.8426    XGBoost
+XGB_Optuna_v1      0.8021    0.5208      0.6316   0.8421    XGBoost
+LogReg_C10.0       0.7647    0.4991      0.6040   0.8361    LogisticReg
+RF_n100_d5         0.7620    0.5163      0.6156   0.8388    RandomForest
+RF_n300_d15        0.5321    0.6104      0.5686   0.8209    RandomForest ← worst
 ```
 
-> 📷 Screenshot: `docs/screenshots/page4_playbook_agent.png`
+![MLflow Parallel Coordinates](docs/screenshots/mlflow_parallel_coordinates.png)
+
+*Parallel coordinates — all 12 runs · red lines = highest recall · LightGBM at lr=0.01 dominates top*
 
 ---
 
-### Page 5 — ROI Simulator · *"What if we change their plan?"*
-*Sliders: tenure boost · charge reduction % · contract upgrade · add tech support · churn probability updates live · revenue saved calculator*
+## ⚙️ GitHub Actions CI/CD — Green ✅
 
-> 📷 Screenshot: `docs/screenshots/page5_roi_simulator.png`
+![GitHub Actions Success](docs/screenshots/github_actions_green.png)
 
----
-
-### Page 6 — Batch Predictor · *"Score all customers at once"*
-*Upload any CSV · Champion model scores all rows · pie chart High/Medium/Low risk · download results CSV · top 10 highest-risk table*
-
-**Proven:** 300-customer high-risk batch → **299/300 correctly classified as High Risk**
-
-> 📷 Screenshot: `docs/screenshots/page6_batch_predictor.png`
+```
+Triggers: push to main + every Monday 6AM UTC + workflow_dispatch
+Steps: checkout → pip install → data validation → docker build → docker push
+Result: Docker image deployed to Docker Hub in 4m 47s ✅
+```
 
 ---
 
-### Page 7 — MLOps Monitor · *"Is the model still working?"*
-*Automated drift detection — upload CSV → result instant · Evidently report embedded · MLflow run history · system health*
+## 📸 7-Page App
 
-**Proven:**
-- Normal data → 0 drifted columns → ✅ Model healthy
-- Shifted distribution → 6 drifted columns → 🔴 Retraining recommended
+### Page 1 — EDA Dashboard
 
-> 📷 Screenshot: `docs/screenshots/page7_mlops_monitor.png`
-> 📷 Screenshot: `docs/screenshots/drift_detected.png` ← README hero
+![EDA Dashboard](docs/screenshots/page1_eda.png)
+
+**7,043 customers · 1,869 churned · 26.5% rate · ₹64.76 avg monthly**
+Month-to-month: **42.7%** churn · One year: **11.3%** · Two year: **2.8%**
+
+---
+
+### Page 2 — Model Comparison
+
+![Model Comparison](docs/screenshots/page2_model_comparison.png)
+
+*Champion `LGB_lr0.01_spw5` highlighted in gold · 12 runs sorted by recall*
+
+---
+
+### Page 3 — Live Predictor ← Key Page
+
+![Live Predictor](docs/screenshots/page3_live_predictor.png)
+
+*Fiber optic · Month-to-month · Tenure 12m · ₹65/month → **66.9% · 🟡 MEDIUM**
+SHAP: tenure +0.717 · PaperlessBilling +0.178 · TechSupport +0.125*
+
+---
+
+### Page 4 — Churn Playbook Agent
+
+![Churn Playbook Agent](docs/screenshots/page4_playbook_agent.png)
+
+*LangChain + Groq LLaMA 3.1 streams specific retention actions per customer*
+
+---
+
+### Page 5 — ROI Simulator
+
+![ROI Simulator](docs/screenshots/page5_roi_simulator.png)
+
+*66.9% → 48.7% churn · Risk reduction: 18.2pp · Revenue saved: ₹135/yr*
+
+---
+
+### Page 6 — Batch Predictor
+
+![Batch Predictor](docs/screenshots/page6_batch_predictor.png)
+
+*300 high-risk customers → **299 High · 1 Medium · 0 Low** (99.7%)*
+
+---
+
+### Page 7 — MLOps Monitor
+
+![MLOps Monitor](docs/screenshots/page7_mlops_monitor.png)
+
+![Drift Detected](docs/screenshots/drift_detected_6_features.png)
+
+*Normal data: 0 drift ✅ · High-risk batch: 🔴 6 features drifted · retraining recommended*
 
 ---
 
@@ -139,105 +159,41 @@ pushing churn probability to 89.3%
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  DATA LAYER                                                 │
-│  IBM Telco · 7,043 customers · 20 features                 │
-│  Great Expectations · 5 data quality checks                │
+│  IBM Telco · 7,043 customers · 20 features · 26.5% churn  │
+│  Great Expectations · 5 data quality checks · all pass     │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │  EXPERIMENT LAYER — 12-run MLflow Comparison                │
-│                                                             │
-│  Logistic Regression  ×3  (C = 0.1 / 1.0 / 10.0)         │
-│  Random Forest        ×3  (n_estimators 100/200/300)       │
-│  LightGBM             ×3  (lr = 0.1 / 0.05 / 0.01)       │
-│  XGBoost + Optuna     ×3  (50 trials · recall objective)  │
-│                                                             │
+│  LR×3 · RF×3 · LightGBM×3 · XGBoost+Optuna×3             │
 │  Champion: LGB_lr0.01_spw5 · Recall 86.63% · AUC 0.8317  │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │  EXPLAINABILITY LAYER                                       │
-│  SHAP TreeExplainer → per-customer feature impact          │
-│  Top 5 positive drivers  (increasing churn risk)           │
-│  Top 5 negative drivers  (reducing churn risk)             │
-│  Waterfall chart rendered per prediction in real time      │
+│  SHAP TreeExplainer → tenure +0.717 · Billing +0.178      │
+│  Waterfall chart per prediction · top 5 pos + neg drivers  │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │  GENAI LAYER  ← Unique differentiator                       │
-│  LangChain + Groq LLaMA 3.1-8B-Instant                    │
-│  Input  : churn probability + SHAP values + profile        │
-│  Output : plain-English WHY + 3 retention actions          │
-│           + urgency level · streamed token by token        │
+│  LangChain + Groq LLaMA 3.1-8B-Instant · streamed output  │
+│  66.9% prob + SHAP → plain-English WHY + 3 actions        │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │  SERVING LAYER                                              │
-│  FastAPI  POST /predict → JSON < 200ms                     │
-│  Streamlit 7-page app → live · batch · ROI · monitor      │
-│  Docker   containerised · runs on any OS or cloud          │
+│  FastAPI POST /predict → 0.892 · High · < 200ms           │
+│  Streamlit 7-page · Docker containerised                   │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │  MLOPS LAYER                                                │
-│  Evidently AI   upload CSV → instant drift result          │
-│  GitHub Actions push → Docker build → Docker Hub           │
-│  Schedule       every Monday 6AM UTC auto-retrain          │
+│  Evidently AI · 0 drift normal · 6 drift high-risk        │
+│  GitHub Actions · push → Docker Hub · 4m 47s · ✅         │
+│  Every Monday 6AM UTC auto-retrain                         │
 └─────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 🔬 MLOps Pipeline
-
-### MLflow — 12-Run Experiment
-
-```
-Run Name            Recall    F1      AUC-ROC
-──────────────────────────────────────────────
-LGB_lr0.01_spw5    0.8663   0.5972   0.8317  ← 🏆 CHAMPION
-XGB_Optuna_v2      0.8209   0.6097   0.8426
-XGB_Optuna_v1      0.8021   0.6316   0.8421
-LogReg_C10.0       0.7647   0.6040   0.8361
-RF_n100_d5         0.7620   0.6156   0.8388
-RF_n300_d15        0.5321   0.5686   0.8209  ← worst
-```
-
-> 📷 Screenshot: `docs/screenshots/mlflow_runs_sorted_recall.png`
-
----
-
-### Evidently AI — Automated Drift Detection
-
-Upload any CSV in the MLOps Monitor page → drift analysis runs automatically → result shown instantly. No manual script execution needed.
-
-```
-Scenario              Drifted Columns    Decision
-──────────────────────────────────────────────────
-Normal data split     0                  ✅ Model healthy
-High-risk batch       6                  🔴 Retrain recommended
-```
-
-> 📷 Screenshot: `docs/screenshots/drift_detected.png`
-
----
-
-### GitHub Actions — CI/CD Pipeline
-
-```
-Triggers:
-  push to main        → every code change auto-deploys
-  every Monday 6AM    → weekly scheduled retraining
-  workflow_dispatch   → manual trigger anytime
-
-Steps:
-  1. Checkout + Python 3.9
-  2. pip install -r requirements.txt
-  3. python src/data_validation.py   ← 5 data quality checks
-  4. docker build -t churn-predictor .
-  5. docker push → Docker Hub        ← production image updated
-```
-
-> 📷 Screenshot: `docs/screenshots/github_actions_green.png` ← **MOST IMPORTANT**
 
 ---
 
@@ -248,72 +204,32 @@ Steps:
 | **ML Models** | LightGBM · XGBoost · Random Forest · Logistic Regression | 4 algorithms · 12 MLflow runs |
 | **Hyperparameter Tuning** | Optuna (50 trials) | Recall-maximising Bayesian search |
 | **Explainability** | SHAP TreeExplainer | Per-customer waterfall charts |
-| **GenAI** | LangChain + Groq LLaMA 3.1 | Streaming retention playbook |
-| **Experiment Tracking** | MLflow | Run comparison · model registry |
-| **Drift Monitoring** | Evidently AI | Automated distribution shift detection |
+| **GenAI** | LangChain + Groq LLaMA 3.1-8B-Instant | Streaming retention playbook |
+| **Experiment Tracking** | MLflow 3.1.4 | Run comparison · model registry |
+| **Drift Monitoring** | Evidently AI 0.4.30 | Automated distribution shift detection |
 | **Data Validation** | Great Expectations | 5 production data quality checks |
 | **REST API** | FastAPI + Uvicorn | POST /predict · JSON · < 200ms |
 | **Web App** | Streamlit + Plotly | 7-page interactive dashboard |
 | **Containerisation** | Docker | Reproducible · cloud-ready |
-| **CI/CD** | GitHub Actions | Auto build + push on every commit |
+| **CI/CD** | GitHub Actions | Auto build + push · 4m 47s pipeline |
 | **Deployment** | Streamlit Cloud | Live public URL |
-| **Language** | Python 3.9 | — |
+| **Language** | Python 3.9 | Mac M3 · VS Code |
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/kiruthikaJayaramanOfficial/churn-predictor-genai.git
 cd churn-predictor-genai
-
-# Environment
-python3 -m venv churn_env
-source churn_env/bin/activate
+python3 -m venv churn_env && source churn_env/bin/activate
+brew install libomp   # Mac only
 pip install -r requirements.txt
-
-# Add Groq API key
 echo "GROQ_API_KEY=your_key_here" > .env
-
-# Download dataset → save as data/telco_churn.csv
-# https://www.kaggle.com/datasets/blastchar/telco-customer-churn
-
-# Train all 12 models (~5 mins)
-python src/train_all_models.py
-
-# MLflow UI
-mlflow ui
-# → http://127.0.0.1:5000
-
-# Streamlit app
-streamlit run app/main.py
-# → http://localhost:8501
-
-# FastAPI
-uvicorn app.api:app --reload
-# → http://localhost:8000/docs
-
-# Test API
-curl -X POST "http://localhost:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d '{"tenure": 2, "MonthlyCharges": 85.0, "Contract": "Month-to-month"}'
-# → {"churn_probability": 0.892, "risk_tier": "High"}
-
-# Drift detection
-python mlops/drift_detector.py
-
-# Generate synthetic test data
-python eval/generate_test_data.py
-```
-
-### Docker
-
-```bash
-docker build -t churn-predictor .
-docker run -p 8000:8000 churn-predictor
-curl http://localhost:8000/health
-# → {"status": "healthy"}
+# Download telco_churn.csv from Kaggle → save as data/telco_churn.csv
+python src/train_all_models.py   # trains all 12 models (~5 mins)
+streamlit run app/main.py        # http://localhost:8501
+uvicorn app.api:app --reload     # http://localhost:8000
 ```
 
 ---
@@ -323,57 +239,19 @@ curl http://localhost:8000/health
 ```
 churn-predictor-genai/
 ├── app/
-│   ├── main.py                        # Streamlit entry point
-│   ├── api.py                         # FastAPI REST endpoint
-│   └── pages/
-│       ├── 1_EDA_Dashboard.py
-│       ├── 2_Model_Comparison.py
-│       ├── 3_Live_Predictor.py
-│       ├── 4_Churn_Playbook_Agent.py
-│       ├── 5_ROI_Simulator.py
-│       ├── 6_Batch_Predictor.py
-│       └── 7_MLOps_Monitor.py
+│   ├── main.py · api.py
+│   └── pages/ (7 pages)
 ├── src/
-│   ├── eda.py                         # Load · clean · encode
-│   ├── data_validation.py             # Great Expectations checks
-│   ├── train_all_models.py            # 12-run MLflow experiment
-│   ├── explainability.py              # SHAP waterfall
-│   └── langchain_agent.py             # Groq LLM playbook agent
+│   ├── eda.py · data_validation.py
+│   ├── train_all_models.py · explainability.py
+│   └── langchain_agent.py
 ├── mlops/
-│   ├── drift_detector.py              # Evidently drift detection
-│   └── drift_summary.json             # {trigger_retrain, drifted_features}
-├── eval/
-│   └── generate_test_data.py          # Synthetic customer generator
-├── data/
-│   ├── telco_churn.csv                # 7,043 rows · 20 features
-│   ├── batch_normal.csv               # 500 normal customers
-│   ├── batch_high_risk.csv            # 300 high-risk customers
-│   └── batch_mixed.csv                # 200 mixed customers
-├── models/
-│   ├── champion_model.pkl             # LightGBM champion
-│   └── feature_names.pkl              # Training feature list
-├── .github/workflows/
-│   └── retrain.yml                    # CI/CD pipeline
-├── Dockerfile
-├── requirements.txt
-└── .env                               # GROQ_API_KEY (never committed)
+│   └── drift_detector.py · drift_summary.json
+├── eval/generate_test_data.py
+├── data/ · models/ · docs/screenshots/
+├── .github/workflows/retrain.yml
+└── Dockerfile · requirements.txt
 ```
-
----
-
-## 🎓 Skills Demonstrated
-
-| Skill Area | What Was Built |
-|------------|---------------|
-| **Machine Learning** | 4-algorithm comparison · class imbalance · recall-first objective |
-| **Hyperparameter Optimisation** | Optuna 50-trial Bayesian search |
-| **Experiment Tracking** | MLflow 12-run comparison · Champion/Challenger pattern |
-| **Explainable AI** | SHAP TreeExplainer · per-customer waterfall |
-| **Generative AI** | LangChain · Groq LLM · streaming · prompt engineering |
-| **MLOps** | Evidently drift monitoring · automated retraining trigger |
-| **Software Engineering** | FastAPI · Docker · modular Python · Great Expectations |
-| **CI/CD** | GitHub Actions · auto Docker build + push · scheduled retraining |
-| **Business Impact** | ROI calculator · revenue saved · batch risk segmentation |
 
 ---
 
@@ -383,28 +261,23 @@ churn-predictor-genai/
 `MLflow` `Experiment Tracking` `Model Registry` `Hyperparameter Tuning` `Optuna`
 `SHAP` `Explainable AI` `XAI` `Feature Importance` `Interpretable ML`
 `LangChain` `LLM` `Generative AI` `GenAI` `Prompt Engineering` `Groq` `LLaMA`
-`FastAPI` `REST API` `Uvicorn` `Pydantic`
-`Streamlit` `Plotly` `Interactive Dashboard`
-`Docker` `Containerisation` `Docker Hub`
-`GitHub Actions` `CI/CD` `Continuous Integration` `Continuous Deployment`
-`Evidently AI` `Data Drift` `Model Monitoring` `MLOps`
-`Great Expectations` `Data Validation` `Data Quality`
-`Customer Churn` `Churn Prediction` `Retention` `Telecom` `BFSI`
-`Binary Classification` `Recall` `AUC-ROC` `Precision` `F1` `Class Imbalance`
-`Python` `Pandas` `NumPy` `Scikit-learn`
-`End-to-End ML` `Production ML` `Deployed Model` `Streamlit Cloud`
+`FastAPI` `REST API` `Docker` `Containerisation` `GitHub Actions` `CI/CD`
+`Evidently AI` `Data Drift` `Model Monitoring` `MLOps` `Great Expectations`
+`Customer Churn` `Churn Prediction` `Telecom` `BFSI` `Binary Classification`
+`Recall` `AUC-ROC` `Class Imbalance` `Python` `Streamlit` `Production ML`
 
 ---
 
 ## 📌 Resume Bullet
 
 ```
-LightGBM churn predictor (86.6% recall) from systematic 12-run MLflow
-comparison across 4 algorithms (LR, RF, LightGBM, XGBoost+Optuna);
-LangChain + Groq agent generating plain-English Churn Playbook with
-SHAP explainability per customer; FastAPI + Docker + GitHub Actions CI/CD
-with automated Evidently AI drift monitoring; 7-page Streamlit app with
-live predictor, ROI simulator, batch scorer, MLOps monitor — deployed
+LightGBM churn predictor (86.6% recall) from systematic 12-run MLflow comparison
+across 4 algorithms (LR, RF, LightGBM, XGBoost+Optuna); LangChain + Groq agent
+generating plain-English Churn Playbook with SHAP explainability per customer;
+FastAPI + Docker + GitHub Actions CI/CD (4m 47s) with automated Evidently AI
+drift monitoring (6-feature drift detected on distribution shift); 7-page
+Streamlit app with live predictor, ROI simulator, batch scorer (99.7% on
+high-risk batch), MLOps monitor — deployed
 ```
 
 ---
