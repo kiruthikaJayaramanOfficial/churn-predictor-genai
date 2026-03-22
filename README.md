@@ -1,295 +1,319 @@
-# 📈 Fuzzy-GARCH-FinBERT Volatility Intelligence System
+# 🔮 Churn Predictor + GenAI Agent
 
-<div align="center">
+[![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![LightGBM](https://img.shields.io/badge/LightGBM-86.6%25_Recall-2ecc71?style=for-the-badge)](https://lightgbm.readthedocs.io)
+[![MLflow](https://img.shields.io/badge/MLflow-12_Runs-0194E2?style=for-the-badge)](https://mlflow.org)
+[![LangChain](https://img.shields.io/badge/LangChain-GenAI_Agent-FF6B35?style=for-the-badge)](https://langchain.com)
+[![SHAP](https://img.shields.io/badge/SHAP-Explainability-orange?style=for-the-badge)](https://shap.readthedocs.io)
+[![FastAPI](https://img.shields.io/badge/FastAPI-REST_API-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Docker-Containerised-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![Evidently](https://img.shields.io/badge/Evidently_AI-Drift_Monitor-7C3AED?style=for-the-badge)](https://evidentlyai.com)
+[![Streamlit](https://img.shields.io/badge/Streamlit-7_Pages-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
+[![Optuna](https://img.shields.io/badge/Optuna-Hyperparameter_Tuning-blue?style=for-the-badge)](https://optuna.org)
+[![Groq](https://img.shields.io/badge/Groq-LLaMA_3.1-F55036?style=for-the-badge)](https://groq.com)
 
-![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.41-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![MLflow](https://img.shields.io/badge/MLflow-3.1-0194E2?style=for-the-badge)
-![Evidently](https://img.shields.io/badge/Evidently_AI-0.7-7C3AED?style=for-the-badge)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
-![FinBERT](https://img.shields.io/badge/FinBERT-NLP-orange?style=for-the-badge)
+**Production-grade telecom churn prediction system** — 12-run MLflow experiment · SHAP per-customer explainability · LangChain GenAI retention agent · automated drift detection · FastAPI + Docker + GitHub Actions CI/CD · 7-page Streamlit app
 
-**NIFTY-50 sentiment-volatility forecasting** using WIFCM μ/ν/π fuzzy degrees
-replacing hard thresholds · Full production MLOps pipeline
-
-### 🚀 [Live Dashboard](https://your-app.streamlit.app) ← *Replace with your deployed URL*
-
-</div>
-
----
-
-## 🎯 What This Project Does
-
-Traditional quant systems treat news sentiment as binary — *bullish = buy, bearish = sell*. This ignores a critical third state: **uncertainty**. What if the model genuinely doesn't know which way the market will move?
-
-This project introduces **Weighted Intuitionistic Fuzzy C-Means (WIFCM)** to financial markets — converting FinBERT sentiment scores into three graded degrees:
-
-| Degree | Symbol | Finance Meaning | Portfolio Action |
-|--------|--------|-----------------|-----------------|
-| Membership | **μ** | Bullish confidence | Buy proportionally |
-| Non-membership | **ν** | Bearish confidence | Reduce exposure |
-| Hesitancy | **π** | Market uncertainty | Hold cash |
-
-**Result:** A self-monitoring, auto-retraining system that beats buy-and-hold by **+39.78% Sharpe** and improves GARCH volatility forecasting by **+11.37% MAE**.
+### 🚀 [Live Dashboard](https://your-app.streamlit.app) ← *Replace after Streamlit Cloud deploy*
 
 ---
 
-## 📸 Dashboard — 5 Interactive Pages
+## 🎯 The Business Problem
 
-### Page 1 — Sentiment Intelligence
-*FinBERT → WIFCM μ/ν/π · 7-day rolled sentiment · Regime distribution donut · Lookback window slider*
+Telecom companies lose **₹12+ lakh/month** from silent customer churn. Traditional retention teams react *after* a customer cancels — too late, too expensive.
 
-![Sentiment Intelligence](docs/screenshots/main1.png)
+> **This system predicts which customer will churn 30 days before it happens, explains exactly WHY per customer using SHAP, and generates a specific AI-powered retention playbook — automatically.**
 
----
+| Without This System | With This System |
+|---|---|
+| React after customer cancels | Predict 30 days before they leave |
+| Call center contacts random customers | Score entire customer base in one CSV upload |
+| No idea why customer churned | SHAP explains top 5 reasons per customer |
+| Model trained once, silently degrades | Evidently AI detects drift → auto-retrain |
+| ML only on data scientist's laptop | Live REST API + 7-page web app for the whole team |
+| CFO asks "what's the ROI?" | ROI Simulator calculates revenue saved per intervention |
 
-### Page 2 — Volatility Forecast
-*GARCH(1,1) Baseline vs GARCH-X+WIFCM · MAE comparison bars · Realized vol overlay · Improvement gauge*
-
-![Volatility Forecast](docs/screenshots/main2.png)
-
----
-
-### Page 3 — Portfolio Optimizer
-*Select real market event → WIFCM scores 20 NIFTY stocks → Top N picks with ₹ allocation · Signal vs actual return scatter*
-
-![Portfolio Optimizer](docs/screenshots/main3.png)
+**Dataset:** IBM Telco Customer Churn · 7,043 customers · 20 features · 26.5% churn rate · Kaggle
 
 ---
 
 ## 📊 Proven Results
 
-### Volatility Forecasting · 366 test days (Jan 2022 – Jun 2023)
+| Metric | Value |
+|--------|-------|
+| **Champion Model** | LightGBM (`LGB_lr0.01_spw5`) |
+| **Recall** | **86.63%** — catches 87 out of every 100 churners |
+| **AUC-ROC** | 0.8317 |
+| **MLflow Runs** | 12 across 4 algorithms |
+| **Batch Test** | 300 high-risk customers → 299/300 correctly flagged (99.7%) |
+| **Drift Test** | 6 features drifted on shifted distribution → retraining triggered |
+| **API Response** | < 200ms per prediction |
 
-| Model | MAE | RMSE | Improvement |
-|-------|-----|------|-------------|
-| GARCH(1,1) Baseline | 1.1244 | 1.2131 | — |
-| **GARCH-X + WIFCM** | **0.9965** | **1.0720** | **MAE ↓11.37% · RMSE ↓11.63%** |
-
-### Portfolio Performance
-
-| Strategy | Sharpe Ratio | Total Return |
-|----------|-------------|--------------|
-| Buy & Hold (baseline) | 0.7536 | 21.31% |
-| **Fuzzy-WIFCM** | **1.0534** | **29.03%** |
-| **Improvement** | **+39.78%** | **+7.72pp** |
-
-### Real Market Event Validation (Portfolio Optimizer)
-
-| Event | WIFCM Decision | Actual Outcome |
-|-------|---------------|----------------|
-| 🦠 COVID Crash Mar 2020 | Avoid Banking/Metals → Hold Pharma | Pharma +30%, Banks −52% ✅ |
-| 💰 Union Budget Feb 2021 | Overweight Infra/Banking | Infra rally confirmed ✅ |
-| 📈 RBI Rate Hike May 2022 | Reduce NBFC/Banking exposure | NBFC fell −63% ✅ |
-| ⚔️ Russia-Ukraine Feb 2022 | Energy positive, reduce Infra | Energy outperformed ✅ |
-| 🏦 Adani Crisis Jan 2023 | Avoid Infra/Banking | Infra crashed −90% ✅ |
+> **Why Recall over Accuracy?**
+> Missing a churner = ₹780/year lost forever.
+> Wrong flag on a loyal customer = ₹50 discount cost.
+> Recall-first is the correct business objective — not accuracy.
 
 ---
 
-## 🆚 WIFCM vs Traditional Approaches
+## 📸 7-Page App — What Each Page Shows
 
-```
-┌──────────────────────────────────┬───────────────────────────────────────┐
-│  TRADITIONAL HARD THRESHOLD      │  WIFCM FUZZY APPROACH                 │
-├──────────────────────────────────┼───────────────────────────────────────┤
-│ Sentiment > 0  → BUY 100%        │ μ=0.72, ν=0.18, π=0.10               │
-│ Sentiment < 0  → SELL 0%         │ Signal = (0.72−0.18)×(1−0.10) = 0.49 │
-│ No middle ground                 │ Exposure = 48.6% (graded)             │
-├──────────────────────────────────┼───────────────────────────────────────┤
-│ Binary: Bullish OR Bearish       │ Three states: Bull + Bear + Uncertain  │
-│ Ignores uncertainty              │ π explicitly models "we don't know"    │
-│ Overreacts to weak signals       │ Dampened by hesitancy degree           │
-│ No confidence weighting          │ Allocation proportional to conviction  │
-├──────────────────────────────────┼───────────────────────────────────────┤
-│ Sharpe: 0.7536                   │ Sharpe: 1.0534  (+39.78%)             │
-└──────────────────────────────────┴───────────────────────────────────────┘
+### Page 1 — EDA Dashboard · *"What does churn look like?"*
+*Churn rate by contract type · tenure histogram coloured by churn · monthly charges violin plot · correlation heatmap · top 5 churn drivers*
 
-Real Example — Russia-Ukraine Feb 2022:
-  Hard threshold : "bearish → full exit (0%)"
-  WIFCM          : π=0.65 (high uncertainty) → 50% exposure
-  Result         : Captured 50% of partial recovery → better risk-adjusted return
+**Key insight:** Month-to-month customers churn at **42.7%** vs 2.8% for two-year contracts.
+
+> 📷 Screenshot: `docs/screenshots/page1_eda.png`
+
+---
+
+### Page 2 — Model Comparison · *"Which model wins?"*
+*All 12 MLflow runs in a sortable table · recall bar chart · Champion badge · multi-metric grouped bar*
+
+> 📷 Screenshot: `docs/screenshots/page2_model_comparison.png`
+> 📷 Screenshot: `docs/screenshots/mlflow_parallel_coordinates.png` ← README hero
+
+---
+
+### Page 3 — Live Predictor · *"Will this customer churn?"* ← Key Page
+*Customer input form · churn probability gauge 0–100% · risk tier badge High/Medium/Low · SHAP waterfall chart*
+
+**Example:** Senior citizen · Month-to-month · Fiber optic · No security · Tenure 2 months → **89.3% churn probability 🔴 HIGH**
+
+> 📷 Screenshot: `docs/screenshots/page3_live_predictor.png`
+
+---
+
+### Page 4 — Churn Playbook Agent · *"WHY + what to do"*
+*LangChain reads SHAP values → generates plain-English explanation → writes Churn Playbook with 3 specific retention actions · streams word by word*
+
+**Sample output:**
 ```
+🔍 Why This Customer Will Churn
+Short tenure (2 months) + high monthly charges ($85) + no security services
+pushing churn probability to 89.3%
+
+🎯 Retention Actions (do these TODAY)
+1. Offer 10% discount on monthly charges immediately
+2. Bundle OnlineSecurity + TechSupport at discounted rate
+3. Waive next month's charges as goodwill gesture
+
+⚡ Urgency: HIGH PRIORITY — Contact within 24 hours
+```
+
+> 📷 Screenshot: `docs/screenshots/page4_playbook_agent.png`
+
+---
+
+### Page 5 — ROI Simulator · *"What if we change their plan?"*
+*Sliders: tenure boost · charge reduction % · contract upgrade · add tech support · churn probability updates live · revenue saved calculator*
+
+> 📷 Screenshot: `docs/screenshots/page5_roi_simulator.png`
+
+---
+
+### Page 6 — Batch Predictor · *"Score all customers at once"*
+*Upload any CSV · Champion model scores all rows · pie chart High/Medium/Low risk · download results CSV · top 10 highest-risk table*
+
+**Proven:** 300-customer high-risk batch → **299/300 correctly classified as High Risk**
+
+> 📷 Screenshot: `docs/screenshots/page6_batch_predictor.png`
+
+---
+
+### Page 7 — MLOps Monitor · *"Is the model still working?"*
+*Automated drift detection — upload CSV → result instant · Evidently report embedded · MLflow run history · system health*
+
+**Proven:**
+- Normal data → 0 drifted columns → ✅ Model healthy
+- Shifted distribution → 6 drifted columns → 🔴 Retraining recommended
+
+> 📷 Screenshot: `docs/screenshots/page7_mlops_monitor.png`
+> 📷 Screenshot: `docs/screenshots/drift_detected.png` ← README hero
 
 ---
 
 ## 🏗️ System Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│  DATA LAYER                                                          │
-│  GDELT API (free, no key, back to 2000) → 5,731 real headlines      │
-│  47 NIFTY-50 stock CSVs → 105,186 rows (2000–2023)                  │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-┌────────────────────────────▼─────────────────────────────────────────┐
-│  SENTIMENT LAYER                                                     │
-│  FinBERT (ProsusAI, 438MB) → pos/neg/neu confidence per headline    │
-│  7-day rolling mean + 1-day lag  ← eliminates lookahead bias        │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-┌────────────────────────────▼─────────────────────────────────────────┐
-│  WIFCM LAYER  ← Novel Contribution from Research Paper              │
-│                                                                      │
-│  rᵢⱼ = d²ᵢⱼ / Σd²ᵢₖ              relative distance normalisation   │
-│  μ = ((1−rᵅ) / (1−(β·r)ᵅ))^(1/α) bullish membership degree        │
-│  ν = rᵅ                           bearish non-membership degree     │
-│  π = 1 − μ − ν                    hesitancy / uncertainty degree    │
-│                                                                      │
-│  signal = (μ − ν) × (1 − π)      dampened fuzzy signal             │
-│  Tunable: α=1.5 · β=0.5 · m=2.0                                    │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-┌────────────────────────────▼─────────────────────────────────────────┐
-│  GARCH-X FORECASTING LAYER                                          │
-│  σ²ₜ = ω + α·ε²ₜ₋₁ + β·σ²ₜ₋₁ + κ·sent²ₜ₋₁                       │
-│  κ > 0  → negative sentiment increases volatility forecast          │
-│  Fitted via scipy.optimize (manual implementation, arch-independent) │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-┌────────────────────────────▼─────────────────────────────────────────┐
-│  PORTFOLIO LAYER                                                     │
-│  μ > 0.6  → Full exposure  100%   high bullish conviction           │
-│  π > 0.4  → Half exposure   50%   hold cash — uncertain             │
-│  ν > 0.6  → Exit market      0%   high bearish conviction           │
-│  else     → Graded: (1 − π) exposure                                │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-┌────────────────────────────▼─────────────────────────────────────────┐
-│  MLOPS LAYER                                                         │
-│  MLflow          experiment tracking, parameter + metric registry   │
-│  Evidently AI    weekly drift detection on μ/ν/π distributions      │
-│  GitHub Actions  weekly CI/CD, auto-retrain when drift > 15%        │
-│  Streamlit Cloud live 5-page public dashboard                       │
-└──────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  DATA LAYER                                                 │
+│  IBM Telco · 7,043 customers · 20 features                 │
+│  Great Expectations · 5 data quality checks                │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────────────┐
+│  EXPERIMENT LAYER — 12-run MLflow Comparison                │
+│                                                             │
+│  Logistic Regression  ×3  (C = 0.1 / 1.0 / 10.0)         │
+│  Random Forest        ×3  (n_estimators 100/200/300)       │
+│  LightGBM             ×3  (lr = 0.1 / 0.05 / 0.01)       │
+│  XGBoost + Optuna     ×3  (50 trials · recall objective)  │
+│                                                             │
+│  Champion: LGB_lr0.01_spw5 · Recall 86.63% · AUC 0.8317  │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────────────┐
+│  EXPLAINABILITY LAYER                                       │
+│  SHAP TreeExplainer → per-customer feature impact          │
+│  Top 5 positive drivers  (increasing churn risk)           │
+│  Top 5 negative drivers  (reducing churn risk)             │
+│  Waterfall chart rendered per prediction in real time      │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────────────┐
+│  GENAI LAYER  ← Unique differentiator                       │
+│  LangChain + Groq LLaMA 3.1-8B-Instant                    │
+│  Input  : churn probability + SHAP values + profile        │
+│  Output : plain-English WHY + 3 retention actions          │
+│           + urgency level · streamed token by token        │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────────────┐
+│  SERVING LAYER                                              │
+│  FastAPI  POST /predict → JSON < 200ms                     │
+│  Streamlit 7-page app → live · batch · ROI · monitor      │
+│  Docker   containerised · runs on any OS or cloud          │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────────────┐
+│  MLOPS LAYER                                                │
+│  Evidently AI   upload CSV → instant drift result          │
+│  GitHub Actions push → Docker build → Docker Hub           │
+│  Schedule       every Monday 6AM UTC auto-retrain          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔬 MLOps Stack
+## 🔬 MLOps Pipeline
 
-### MLflow — Experiment Tracking & Model Registry
+### MLflow — 12-Run Experiment
 
-Every pipeline run automatically logs parameters, metrics, and source for full reproducibility and comparison.
-
-![MLflow Experiments List](docs/screenshots/mlflow_main.png)
-
-![MLflow Run Detail — Parameters & Metrics](docs/screenshots/mlflow_metric.png)
-
-![MLflow Metric Charts](docs/screenshots/mlflow_metric_pic.png)
-
-**Every run logs:**
 ```
-Parameters : alpha=1.5, beta=0.5, news_source=GDELT, data_rows=366
-Metrics    : MAE_baseline=1.1244  MAE_garchx=0.9965
-             MAE_improvement=11.37%  RMSE_improvement=11.63%
-             Sharpe_baseline=0.7536  Sharpe_fuzzy=1.0534
-             Sharpe_improvement=39.78%
+Run Name            Recall    F1      AUC-ROC
+──────────────────────────────────────────────
+LGB_lr0.01_spw5    0.8663   0.5972   0.8317  ← 🏆 CHAMPION
+XGB_Optuna_v2      0.8209   0.6097   0.8426
+XGB_Optuna_v1      0.8021   0.6316   0.8421
+LogReg_C10.0       0.7647   0.6040   0.8361
+RF_n100_d5         0.7620   0.6156   0.8388
+RF_n300_d15        0.5321   0.5686   0.8209  ← worst
 ```
 
-**Compare runs** side-by-side to find optimal α/β combination:
-
-![MLflow Run Comparison — α vs Sharpe](docs/screenshots/compare_mlflow.png)
+> 📷 Screenshot: `docs/screenshots/mlflow_runs_sorted_recall.png`
 
 ---
 
-### Evidently AI — Drift Detection
+### Evidently AI — Automated Drift Detection
 
-Monitors weekly μ/ν/π distributions. Detects when market regime shifts require model retraining.
+Upload any CSV in the MLOps Monitor page → drift analysis runs automatically → result shown instantly. No manual script execution needed.
 
-![Evidently Drift Report](docs/screenshots/drift.png)
+```
+Scenario              Drifted Columns    Decision
+──────────────────────────────────────────────────
+Normal data split     0                  ✅ Model healthy
+High-risk batch       6                  🔴 Retrain recommended
+```
 
-**What this report proves:**
-- **π (hesitancy) DETECTED as drifted** between Jan–Jun 2022 (bear: RBI hikes + Russia-Ukraine) and Jul–Dec 2022 (bull: recovery period)
-- **Jensen-Shannon distance** quantifies how much each distribution shifted
-- When `share_of_drifted_columns > 0.15` → `trigger_retrain = true` → GitHub Actions reruns pipeline automatically
-
-**Why π drifted and not μ/ν:** Uncertainty was HIGH during the crisis, LOW during recovery. The hesitancy degree uniquely captured this regime change — proving WIFCM's three-state representation is richer than binary sentiment.
+> 📷 Screenshot: `docs/screenshots/drift_detected.png`
 
 ---
 
-### GitHub Actions — Weekly CI/CD Pipeline
+### GitHub Actions — CI/CD Pipeline
 
-![GitHub Actions — Workflow Run](docs/screenshots/action.png)
+```
+Triggers:
+  push to main        → every code change auto-deploys
+  every Monday 6AM    → weekly scheduled retraining
+  workflow_dispatch   → manual trigger anytime
 
-```yaml
-# Runs every Monday 6am UTC + on manual trigger
-Every Monday:
-  1. Checkout repo
-  2. Fetch latest NIFTY prices (yfinance)
-  3. Run drift detection (Evidently AI)
-  4. Check drift_summary.json
-     ├── trigger_retrain=true  → rerun garch_model.py → log to MLflow
-     └── trigger_retrain=false → skip retrain, dashboard stays current
-  5. Commit updated eval/ + data/ results
-  6. Streamlit Cloud auto-deploys on push
+Steps:
+  1. Checkout + Python 3.9
+  2. pip install -r requirements.txt
+  3. python src/data_validation.py   ← 5 data quality checks
+  4. docker build -t churn-predictor .
+  5. docker push → Docker Hub        ← production image updated
 ```
 
-**Zero manual intervention.** The system monitors, decides, and retrains itself.
+> 📷 Screenshot: `docs/screenshots/github_actions_green.png` ← **MOST IMPORTANT**
 
 ---
 
 ## ⚡ Technology Stack
 
-| Category | Technology | Version | Purpose |
-|----------|-----------|---------|---------|
-| **NLP** | FinBERT (ProsusAI) | transformers 4.57 | Financial headline sentiment scoring |
-| **Fuzzy Math** | WIFCM (custom impl.) | — | μ/ν/π membership degree computation |
-| **Volatility** | GARCH-X (arch + scipy) | arch 8.0 | Sentiment-augmented variance forecasting |
-| **News Data** | GDELT API | — | Free, no key, historical back to 2000 |
-| **Market Data** | yfinance | 1.2 | NIFTY-50 daily OHLCV prices |
-| **Experiment** | MLflow | 3.1 | Parameter logging, metric tracking, registry |
-| **Drift** | Evidently AI | 0.7 | Weekly distribution monitoring |
-| **CI/CD** | GitHub Actions | — | Automated weekly retraining pipeline |
-| **Dashboard** | Streamlit + Plotly | 1.41 | 5-page interactive dark-theme UI |
-| **Deployment** | Streamlit Cloud | — | Live public URL, auto-deploys on push |
-
----
-
-## 🔬 Research Foundation
-
-Extends **"A Dual-Pathway Tunable Modified Intuitionistic Fuzzy C-Means Framework with Dempster-Shafer Fusion for Melanoma Lesion Segmentation"** *(VIT Chennai, 2025)* into quantitative finance.
-
-| | Research Paper (Medical Imaging) | This Project (Finance) |
-|---|---|---|
-| **Input** | LAB + Grayscale dermoscopic pixels | GDELT financial news headlines |
-| **μ (membership)** | Lesion pixel belonging | Bullish market confidence |
-| **ν (non-membership)** | Background belonging | Bearish market confidence |
-| **π (hesitancy)** | Boundary uncertainty | Market regime uncertainty |
-| **α parameter** | Cluster transition sharpness | Sentiment sharpness control |
-| **β parameter** | Membership asymmetric scaling | Sentiment scaling factor |
-| **Fusion method** | Dempster-Shafer evidence theory | GARCH-X variance equation (κ·sent²) |
-| **Output** | Binary lesion segmentation mask | Graded portfolio exposure [0, 1] |
-| **Best metric** | Jaccard Index 0.9167, Dice 0.9561 | Sharpe +39.78%, MAE −11.37% |
-
-> **Why this is unique:** No published work applies WIFCM with tunable dual parameters (α, β) to financial sentiment. This is the first known transfer of this medical imaging framework to quantitative finance — your research paper directly enables a new application domain.
+| Category | Technology | Purpose |
+|----------|-----------|---------|
+| **ML Models** | LightGBM · XGBoost · Random Forest · Logistic Regression | 4 algorithms · 12 MLflow runs |
+| **Hyperparameter Tuning** | Optuna (50 trials) | Recall-maximising Bayesian search |
+| **Explainability** | SHAP TreeExplainer | Per-customer waterfall charts |
+| **GenAI** | LangChain + Groq LLaMA 3.1 | Streaming retention playbook |
+| **Experiment Tracking** | MLflow | Run comparison · model registry |
+| **Drift Monitoring** | Evidently AI | Automated distribution shift detection |
+| **Data Validation** | Great Expectations | 5 production data quality checks |
+| **REST API** | FastAPI + Uvicorn | POST /predict · JSON · < 200ms |
+| **Web App** | Streamlit + Plotly | 7-page interactive dashboard |
+| **Containerisation** | Docker | Reproducible · cloud-ready |
+| **CI/CD** | GitHub Actions | Auto build + push on every commit |
+| **Deployment** | Streamlit Cloud | Live public URL |
+| **Language** | Python 3.9 | — |
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/kiruthikaJayaramanOfficial/Fuzzy-GARCH-FinBERT.git
-cd Fuzzy-GARCH-FinBERT
+# Clone
+git clone https://github.com/kiruthikaJayaramanOfficial/churn-predictor-genai.git
+cd churn-predictor-genai
 
-# Create virtual environment
-python3 -m venv fuzzy_env
-source fuzzy_env/bin/activate    # Mac/Linux
+# Environment
+python3 -m venv churn_env
+source churn_env/bin/activate
 pip install -r requirements.txt
 
-# Run full pipeline (uses proven pre-built data)
-python3 src/build_from_proven.py
+# Add Groq API key
+echo "GROQ_API_KEY=your_key_here" > .env
 
-# Launch the 5-page dashboard
-python3 -m streamlit run apps/streamlit_app/app.py
-# Open: http://localhost:8501
+# Download dataset → save as data/telco_churn.csv
+# https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 
-# View MLflow experiment tracking
-mlflow ui --host 0.0.0.0 --port 5001
-# Open: http://localhost:5001
+# Train all 12 models (~5 mins)
+python src/train_all_models.py
 
-# View Evidently drift report
-open eval/drift_report.html
+# MLflow UI
+mlflow ui
+# → http://127.0.0.1:5000
+
+# Streamlit app
+streamlit run app/main.py
+# → http://localhost:8501
+
+# FastAPI
+uvicorn app.api:app --reload
+# → http://localhost:8000/docs
+
+# Test API
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"tenure": 2, "MonthlyCharges": 85.0, "Contract": "Month-to-month"}'
+# → {"churn_probability": 0.892, "risk_tier": "High"}
+
+# Drift detection
+python mlops/drift_detector.py
+
+# Generate synthetic test data
+python eval/generate_test_data.py
+```
+
+### Docker
+
+```bash
+docker build -t churn-predictor .
+docker run -p 8000:8000 churn-predictor
+curl http://localhost:8000/health
+# → {"status": "healthy"}
 ```
 
 ---
@@ -297,32 +321,42 @@ open eval/drift_report.html
 ## 📁 Project Structure
 
 ```
-Fuzzy-GARCH-FinBERT/
-├── apps/streamlit_app/
-│   └── app.py                      # 5-page interactive dashboard
+churn-predictor-genai/
+├── app/
+│   ├── main.py                        # Streamlit entry point
+│   ├── api.py                         # FastAPI REST endpoint
+│   └── pages/
+│       ├── 1_EDA_Dashboard.py
+│       ├── 2_Model_Comparison.py
+│       ├── 3_Live_Predictor.py
+│       ├── 4_Churn_Playbook_Agent.py
+│       ├── 5_ROI_Simulator.py
+│       ├── 6_Batch_Predictor.py
+│       └── 7_MLOps_Monitor.py
 ├── src/
-│   ├── data_collection.py          # NIFTY-50 price download
-│   ├── news_collection.py          # GDELT historical news fetching
-│   ├── merge_data.py               # Price + news alignment
-│   ├── sentiment.py                # FinBERT batch scoring
-│   ├── fuzzy_index.py              # WIFCM μ/ν/π computation
-│   ├── garch_model.py              # GARCH + GARCH-X (MLflow logging)
-│   ├── portfolio.py                # Fuzzy exposure strategy
-│   ├── drift_detector.py           # Evidently drift detection
-│   ├── build_from_proven.py        # Full combined pipeline runner
-│   └── stock_loader.py             # 47-stock NIFTY CSV loader
-├── data/
-│   ├── stocks/                     # 47 individual stock CSVs (105K rows)
-│   ├── fuzzy_index.csv             # μ/ν/π time series (366 days)
-│   ├── portfolio_results.csv       # Daily strategy returns
-│   └── forecasts/model_comparison.csv
+│   ├── eda.py                         # Load · clean · encode
+│   ├── data_validation.py             # Great Expectations checks
+│   ├── train_all_models.py            # 12-run MLflow experiment
+│   ├── explainability.py              # SHAP waterfall
+│   └── langchain_agent.py             # Groq LLM playbook agent
+├── mlops/
+│   ├── drift_detector.py              # Evidently drift detection
+│   └── drift_summary.json             # {trigger_retrain, drifted_features}
 ├── eval/
-│   ├── drift_report.html           # Evidently interactive HTML report
-│   └── drift_summary.json          # Drift trigger: {trigger_retrain: bool}
-├── docs/screenshots/               # All dashboard + MLflow screenshots
+│   └── generate_test_data.py          # Synthetic customer generator
+├── data/
+│   ├── telco_churn.csv                # 7,043 rows · 20 features
+│   ├── batch_normal.csv               # 500 normal customers
+│   ├── batch_high_risk.csv            # 300 high-risk customers
+│   └── batch_mixed.csv                # 200 mixed customers
+├── models/
+│   ├── champion_model.pkl             # LightGBM champion
+│   └── feature_names.pkl              # Training feature list
 ├── .github/workflows/
-│   └── retrain.yml                 # Weekly CI/CD pipeline
-└── requirements.txt
+│   └── retrain.yml                    # CI/CD pipeline
+├── Dockerfile
+├── requirements.txt
+└── .env                               # GROQ_API_KEY (never committed)
 ```
 
 ---
@@ -330,30 +364,59 @@ Fuzzy-GARCH-FinBERT/
 ## 🎓 Skills Demonstrated
 
 | Skill Area | What Was Built |
-|-----------|---------------|
-| **NLP & Deep Learning** | FinBERT financial text classification, 1476-row batch inference |
-| **Fuzzy Mathematics** | Novel WIFCM membership function with tunable α/β parameters |
-| **Time Series** | GARCH-X volatility modelling, 366-day rolling 1-step-ahead forecast |
-| **MLOps** | MLflow experiment tracking · Evidently drift monitoring · GitHub Actions CI/CD |
-| **Quantitative Finance** | Sharpe ratio, portfolio optimisation, risk-adjusted exposure sizing |
-| **Data Engineering** | GDELT + yfinance multi-source pipeline, 105K+ row stock dataset |
-| **Software Engineering** | Modular Python, automated retraining, Streamlit Cloud deployment |
-| **Research Transfer** | Academic WIFCM framework successfully extended to new domain |
+|------------|---------------|
+| **Machine Learning** | 4-algorithm comparison · class imbalance · recall-first objective |
+| **Hyperparameter Optimisation** | Optuna 50-trial Bayesian search |
+| **Experiment Tracking** | MLflow 12-run comparison · Champion/Challenger pattern |
+| **Explainable AI** | SHAP TreeExplainer · per-customer waterfall |
+| **Generative AI** | LangChain · Groq LLM · streaming · prompt engineering |
+| **MLOps** | Evidently drift monitoring · automated retraining trigger |
+| **Software Engineering** | FastAPI · Docker · modular Python · Great Expectations |
+| **CI/CD** | GitHub Actions · auto Docker build + push · scheduled retraining |
+| **Business Impact** | ROI calculator · revenue saved · batch risk segmentation |
+
+---
+
+## 🔑 ATS Keywords
+
+`Machine Learning` `LightGBM` `XGBoost` `Random Forest` `Logistic Regression`
+`MLflow` `Experiment Tracking` `Model Registry` `Hyperparameter Tuning` `Optuna`
+`SHAP` `Explainable AI` `XAI` `Feature Importance` `Interpretable ML`
+`LangChain` `LLM` `Generative AI` `GenAI` `Prompt Engineering` `Groq` `LLaMA`
+`FastAPI` `REST API` `Uvicorn` `Pydantic`
+`Streamlit` `Plotly` `Interactive Dashboard`
+`Docker` `Containerisation` `Docker Hub`
+`GitHub Actions` `CI/CD` `Continuous Integration` `Continuous Deployment`
+`Evidently AI` `Data Drift` `Model Monitoring` `MLOps`
+`Great Expectations` `Data Validation` `Data Quality`
+`Customer Churn` `Churn Prediction` `Retention` `Telecom` `BFSI`
+`Binary Classification` `Recall` `AUC-ROC` `Precision` `F1` `Class Imbalance`
+`Python` `Pandas` `NumPy` `Scikit-learn`
+`End-to-End ML` `Production ML` `Deployed Model` `Streamlit Cloud`
+
+---
+
+## 📌 Resume Bullet
+
+```
+LightGBM churn predictor (86.6% recall) from systematic 12-run MLflow
+comparison across 4 algorithms (LR, RF, LightGBM, XGBoost+Optuna);
+LangChain + Groq agent generating plain-English Churn Playbook with
+SHAP explainability per customer; FastAPI + Docker + GitHub Actions CI/CD
+with automated Evidently AI drift monitoring; 7-page Streamlit app with
+live predictor, ROI simulator, batch scorer, MLOps monitor — deployed
+```
 
 ---
 
 ## 📬 Contact
 
-**Kiruthika Jayaraman** · VIT Chennai · Department of Mathematics, School of Advanced Sciences
+**Kiruthika Jayaraman** · VIT Chennai
 
 [![GitHub](https://img.shields.io/badge/GitHub-kiruthikaJayaramanOfficial-181717?style=flat-square&logo=github)](https://github.com/kiruthikaJayaramanOfficial)
 
 ---
 
-<div align="center">
-
-*Research-grade methodology · Production MLOps · Real GDELT news · 105,186 stock data points*
+*Production MLOps · GenAI layer · Real Telco data · 12-run systematic experiment · Automated retraining*
 
 **⭐ Star this repo if you found it useful!**
-
-</div>
