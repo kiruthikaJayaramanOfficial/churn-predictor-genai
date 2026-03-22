@@ -271,13 +271,15 @@ churn-predictor-genai/
 ## 📌 Resume Bullet
 
 ```
-LightGBM churn predictor (86.6% recall) from systematic 12-run MLflow comparison
-across 4 algorithms (LR, RF, LightGBM, XGBoost+Optuna); LangChain + Groq agent
-generating plain-English Churn Playbook with SHAP explainability per customer;
-FastAPI + Docker + GitHub Actions CI/CD (4m 47s) with automated Evidently AI
-drift monitoring (6-feature drift detected on distribution shift); 7-page
-Streamlit app with live predictor, ROI simulator, batch scorer (99.7% on
-high-risk batch), MLOps monitor — deployed
+LightGBM churn predictor (86.6% recall) from systematic 12-run MLflow
+comparison across 4 algorithms (LR, RF, LightGBM, XGBoost+Optuna);
+LightGBM Champion via lr=0.01/spw=5 manual tuning · XGBoost tuned via
+Optuna 50-trial Bayesian search; LangChain + Groq agent generating
+plain-English Churn Playbook with SHAP explainability per customer;
+FastAPI + Docker + GitHub Actions CI/CD (4m 47s) with automated
+Evidently AI drift monitoring (6-feature drift detected on distribution
+shift); 7-page Streamlit app with live predictor, ROI simulator, batch
+scorer (99.7% on high-risk batch), MLOps monitor — deployed
 ```
 
 ---
