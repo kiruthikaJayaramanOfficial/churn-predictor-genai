@@ -2,6 +2,8 @@
   "trigger_retrain": false,
   "drifted_features": [],
   "reference_size": 5000,
-  "current_size": 2043,
-  "report_path": "mlops/drift_report.html"
+  "current_size": 300,
+  "report_path": "mlops/drift_report.html",
+  "source": "Uploaded file",
+  "run_time": "2026-03-22 20:34:57"
 }
