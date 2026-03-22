@@ -15,7 +15,7 @@
 
 **Production-grade telecom churn prediction system** — 12-run MLflow experiment · SHAP per-customer explainability · LangChain GenAI retention agent · automated drift detection · FastAPI + Docker + GitHub Actions CI/CD · 7-page Streamlit app
 
-### 🚀 [Live Dashboard](https://your-app.streamlit.app) ← *Replace after Streamlit Cloud deploy*
+### 🚀 [Live Dashboard](https://churn-predictor-genai-kdtpnqu2jyzrgelekjjbbq.streamlit.app/)
 
 ---
 
