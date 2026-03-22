@@ -5,3 +5,5 @@ churn_env/
 mlruns/
 data/Reviews.csv
 mlops/drift_report.html
+mlops/drift_report_custom.html
+mlruns/
